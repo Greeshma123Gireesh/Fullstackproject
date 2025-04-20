@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="leftsection">
+            <img src="leftimage.jpeg" alt="image">
+        </div>
+        <div class="rightsection">
+            <h2>AI Powered Career Growth and Skill Mapping</h2>
+            <div id="login-box">
+                <h3>Login</h3>
+                <form id="loginform">
+                <input type="text" name="username" id="username" placeholder="enter the username">
+                <input type="password" name="password" id="password" placeholder="password">
+                <button type="submit">Login</button>
+            </form>
+            <p>Don't have account? <a href="#" onclick="showsignup()">SignUp</a></p>
+            </div>
+
+            <div id="signup-box" style="display: none;">
+              <h3>SignUp</h3>
+                <form id="signupform">
+                    <input type="text" id="name" name="name" placeholder="enter the name">
+                <input type="emialid" name="email" id="email" placeholder="enter the email">
+                <input type="password" name="password" id="password" placeholder="enter password">
+                <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Re-enter password">
+                <button type="submit">SignUp</button>
+            </form>
+            <p>Already have account? <a href="#" onclick="showlogin()">Login</a></p>
+            </div>
+        </div>
+    </div>
+   <script src="indexscript.js"></script>
+</body>
+</html>
