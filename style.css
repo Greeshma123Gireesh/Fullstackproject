@@ -28,6 +28,7 @@ body{
 }
 .leftsection img{
     width: 100%;
+    height: auto;
     
 }
 .rightsection{
@@ -37,7 +38,7 @@ body{
     flex-direction: column;
     flex: 1;
 }
-.box-inside{
+#login-box, #signup-box{
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.3);

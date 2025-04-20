@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: linear-gradient(to right, #c9d6ff, #e2e2e2);
+}
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+}
+.logo {
+    font-weight: bold;
+}
+.search-bar input {
+    padding: 5px;
+    width: 300px;
+}
+.account {
+    cursor: pointer;
+}
+.container {
+    width: 80%;
+    margin: 20px auto;
+}
+.three-boxes {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+.box {
+    border: 1px solid #ccc;
+    width: 30%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+.box img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.box a {
+    text-decoration: none;
+    color: black;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.slideshow {
+    width: 100%;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.reviews {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+}
+.review-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.stars {
+    color: gold;
+}
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    margin-top: 20px;
+}
