@@ -38,7 +38,7 @@
       font-size: 16px;
     }
 
-    h1, h2 {
+    h1, h2, h3 {
       color: #2c3e50;
     }
 
@@ -96,14 +96,6 @@
       font-size: 16px;
     }
 
-    #resources {
-      background-color: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      margin-top: 30px;
-    }
-
     @media (max-width: 600px) {
       .nav-link {
         font-size: 14px;
@@ -128,41 +120,15 @@
 
   <!-- Skills Grid -->
   <div class="skills-container" id="skills">
-    <a class="skill-card" href="java.html">
-      <div class="skill-name">Java</div>
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: 70%;">70%</div>
-      </div>
-    </a>
-
-    <a class="skill-card" href="python.html">
-      <div class="skill-name">Python</div>
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: 80%;">80%</div>
-      </div>
-    </a>
-
-    <a class="skill-card" href="html.html">
-      <div class="skill-name">HTML</div>
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: 60%;">60%</div>
-      </div>
-    </a>
-
-    <a class="skill-card" href="css.html">
-      <div class="skill-name">CSS</div>
-      <div class="progress-bar">
-        <div class="progress-fill" style="width: 50%;">50%</div>
-      </div>
-    </a>
+    <!-- Skill cards will be dynamically added here -->
   </div>
 
   <!-- Add Skill -->
-<div id="new-skill-section">
+  <div id="new-skill-section">
     <h2>➕ Add a Skill</h2>
-    <input list="suggestions" id="skillName" placeholder="Enter a skill (e.g. JavaScript)" oninput="showResources()">
-    <button onclick="addSkill()">Add</button>
-  
+    <input list="suggestions" id="skillName" placeholder="Enter a skill (e.g. JavaScript)" oninput="handleSkillInput()">
+    <button onclick="confirmAddSkill()">Add</button>
+
     <datalist id="suggestions">
       <option value="JavaScript">
       <option value="React">
@@ -176,71 +142,87 @@
       <option value="HTML">
     </datalist>
   </div>
-  
-  <!-- Resources -->
-  <div id="resources">
-    <h2>📚 Learning Resources</h2>
-    <div id="resourceList">Select or type a skill to see learning resources.</div>
+
+  <!-- Resource Display -->
+  <div id="resourceDisplay" style="display: none;">
+    <h3>📚 Available Resources</h3>
+    <ul id="resourceList" style="padding-left: 20px;"></ul>
   </div>
-  
+
   <script>
-    const resourceData = {
-      "JavaScript": [
-        "MDN Web Docs - https://developer.mozilla.org/en-US/docs/Web/JavaScript",
-        "JavaScript.info - https://javascript.info/"
-      ],
-      "React": [
-        "React Official Docs - https://reactjs.org/docs/getting-started.html",
-        "FreeCodeCamp React Course - https://www.freecodecamp.org/learn/front-end-development-libraries/"
-      ],
-      "Python": [
-        "Python Official Docs - https://docs.python.org/3/",
-        "Real Python - https://realpython.com/"
-      ],
-      "Java": [
-        "Java Tutorials - https://docs.oracle.com/javase/tutorial/",
-        "W3Schools Java - https://www.w3schools.com/java/"
-      ],
-      "HTML": [
-        "HTML MDN Docs - https://developer.mozilla.org/en-US/docs/Web/HTML",
-        "W3Schools HTML - https://www.w3schools.com/html/"
-      ],
-      "Spring Boot": [
-        "Spring Boot Docs - https://spring.io/projects/spring-boot",
-        "Baeldung Spring Boot - https://www.baeldung.com/spring-boot-start"
-      ],
-      "C++": [
-        "C++ Reference - https://en.cppreference.com/w/",
-        "GeeksforGeeks C++ - https://www.geeksforgeeks.org/c-plus-plus/"
-      ]
+    let selectedSkill = "";
+  
+    // Load skills on page load
+    window.onload = function () {
+      loadSkills();
     };
   
-    function showResources() {
-      const name = document.getElementById("skillName").value.trim();
-      const resList = document.getElementById("resourceList");
-  
-      if (resourceData[name]) {
-        resList.innerHTML = `<strong>${name} Resources:</strong><ul>` +
-          resourceData[name].map(r => `<li><a href="${r.split(' - ')[1]}" target="_blank">${r.split(' - ')[0]}</a></li>`).join('') +
-          '</ul>';
-      } else if (name.length > 0) {
-        resList.innerHTML = `No specific resources found for <strong>${name}</strong>. Try searching online!`;
-      } else {
-        resList.innerHTML = "Select or type a skill to see learning resources.";
-      }
+    function loadSkills() {
+      const skills = JSON.parse(localStorage.getItem("skills") || "[]");
+      skills.forEach(skill => {
+        addSkill(skill.name, skill.progress);
+      });
     }
   
-    function addSkill() {
+    function handleSkillInput() {
       const name = document.getElementById("skillName").value.trim();
+      selectedSkill = name;
+  
       if (!name) {
-        alert("Please enter a skill name");
+        document.getElementById("resourceDisplay").style.display = "none";
         return;
       }
   
+      const allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
+  
+      const resourceList = document.getElementById("resourceList");
+      resourceList.innerHTML = "";
+  
+      if (allResources[name]) {
+        allResources[name].forEach(res => {
+          const li = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = res;
+          link.innerText = res;
+          link.target = "_blank";
+          li.appendChild(link);
+          resourceList.appendChild(li);
+        });
+      } else {
+        resourceList.innerHTML = "<li>No resources available</li>";
+      }
+  
+      document.getElementById("resourceDisplay").style.display = "block";
+    }
+  
+    function confirmAddSkill() {
+      if (!selectedSkill) {
+        alert("Please enter a skill name.");
+        return;
+      }
+  
+      const skills = JSON.parse(localStorage.getItem("skills") || "[]");
+  
+      // Prevent adding duplicate skills
+      if (skills.some(skill => skill.name === selectedSkill)) {
+        alert("Skill already exists.");
+        return;
+      }
+  
+      skills.push({ name: selectedSkill, progress: 0 });
+      localStorage.setItem("skills", JSON.stringify(skills));
+  
+      addSkill(selectedSkill, 0);
+      document.getElementById("skillName").value = "";
+      document.getElementById("resourceDisplay").style.display = "none";
+    }
+  
+    function addSkill(name, progress = 0) {
       const skillsContainer = document.getElementById("skills");
+  
       const skillCard = document.createElement("a");
       skillCard.className = "skill-card";
-      skillCard.href = "#"; // link to skill page if needed
+      skillCard.href = `/SkillProgress/${name}`;
   
       const skillName = document.createElement("div");
       skillName.className = "skill-name";
@@ -251,16 +233,13 @@
   
       const fill = document.createElement("div");
       fill.className = "progress-fill";
-      fill.style.width = "0%";
-      fill.innerText = "0%";
+      fill.style.width = `${progress}%`;
+      fill.innerText = `${progress}%`;
   
       bar.appendChild(fill);
       skillCard.appendChild(skillName);
       skillCard.appendChild(bar);
       skillsContainer.appendChild(skillCard);
-  
-      document.getElementById("skillName").value = "";
-      document.getElementById("resourceList").innerHTML = "Select or type a skill to see learning resources.";
     }
   </script>
   

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skill Progress - Track Learning</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      padding: 0 30px 30px;
+    }
+
+    .navbar {
+      background-color: #000;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 20px;
+      margin-right: 20px;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      margin-right: 15px;
+      font-size: 16px;
+    }
+
+    h1, h2 {
+      color: #2c3e50;
+    }
+
+    .progress-bar {
+      background-color: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 20px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+      font-weight: bold;
+      background-color: #3498db;
+    }
+
+    #resources {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="nav-left">
+      <div class="logo">🧠 SkillTrack</div>
+      <a class="nav-link" href="#">Home</a>
+    </div>
+    <div class="nav-right">
+      <a class="nav-link" href="#">Account</a>
+    </div>
+  </div>
+
+  <h1 id="skillTitle">📊 Skill Progress - </h1>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressBar">0%</div>
+  </div>
+
+  <!-- Resources -->
+  <div id="resources">
+    <h2>📚 Learning Resources</h2>
+    <div id="resourceList">Select a skill to see resources.</div>
+  </div>
+
+  <script>
+    const mockResources = {
+      "javascript": [
+        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+        "https://javascript.info/",
+        "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/"
+      ],
+      "python": [
+        "https://docs.python.org/3/tutorial/",
+        "https://realpython.com/",
+        "https://www.learnpython.org/"
+      ],
+      "html": [
+        "https://developer.mozilla.org/en-US/docs/Web/HTML",
+        "https://www.w3schools.com/html/",
+        "https://html.com/"
+      ],
+      "css": [
+        "https://developer.mozilla.org/en-US/docs/Web/CSS",
+        "https://css-tricks.com/",
+        "https://www.w3schools.com/css/"
+      ]
+    };
+
+    function loadSkillPage() {
+      const skillName = window.location.pathname.split('/').pop().toLowerCase();
+      const displayName = skillName.charAt(0).toUpperCase() + skillName.slice(1);
+
+      document.getElementById("skillTitle").innerText = `📊 Skill Progress - ${displayName}`;
+
+      const resources = mockResources[skillName];
+
+      const resList = document.getElementById("resourceList");
+
+      if (resources) {
+        resList.innerHTML = `<strong>${displayName} Resources:</strong><ul>` +
+          resources.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('') +
+          '</ul>';
+      } else {
+        resList.innerHTML = "No resources found for this skill.";
+      }
+    }
+
+    function updateProgress() {
+      let progress = Math.floor(Math.random() * 100);
+      const progressElement = document.getElementById("progressBar");
+      progressElement.innerText = `${progress}%`;
+      progressElement.style.width = `${progress}%`;
+    }
+
+    window.onload = function() {
+      loadSkillPage();
+      setInterval(updateProgress, 5000);
+    };
+  </script>
+</body>
+</html>
