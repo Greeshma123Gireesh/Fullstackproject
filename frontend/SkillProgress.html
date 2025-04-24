@@ -2,53 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Skill Progress - Track Learning</title>
+  <title>Skill Progress</title>
   <style>
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
       background-color: #f9f9f9;
-      padding: 0 30px 30px;
     }
-
-    .navbar {
-      background-color: #000;
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .nav-left, .nav-right {
-      display: flex;
-      align-items: center;
-    }
-
-    .logo {
-      font-weight: bold;
-      font-size: 20px;
-      margin-right: 20px;
-    }
-
-    .nav-link {
-      color: white;
-      text-decoration: none;
-      margin-right: 15px;
-      font-size: 16px;
-    }
-
-    h1, h2 {
+    h2 {
       color: #2c3e50;
     }
-
     .progress-bar {
       background-color: #ddd;
       border-radius: 20px;
       overflow: hidden;
       height: 20px;
+      margin-top: 20px;
     }
-
     .progress-fill {
       height: 100%;
       text-align: center;
@@ -57,96 +28,93 @@
       font-weight: bold;
       background-color: #3498db;
     }
-
-    #resources {
-      background-color: #fff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    .skill-name {
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .resources-section {
       margin-top: 30px;
+    }
+    .resource-list {
+      list-style-type: none;
+      padding-left: 20px;
+    }
+    .resource-list li {
+      margin-bottom: 5px;
+    }
+    .resource-list a {
+      text-decoration: none;
+      color: #3498db;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <div class="navbar">
-    <div class="nav-left">
-      <div class="logo">🧠 SkillTrack</div>
-      <a class="nav-link" href="#">Home</a>
-    </div>
-    <div class="nav-right">
-      <a class="nav-link" href="#">Account</a>
-    </div>
+  <h2 id="skillTitle">Skill Progress</h2>
+
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-fill" id="progressFill">0%</div>
   </div>
 
-  <h1 id="skillTitle">📊 Skill Progress - </h1>
-
-  <!-- Progress Bar -->
-  <div class="progress-bar">
-    <div class="progress-fill" id="progressBar">0%</div>
-  </div>
-
-  <!-- Resources -->
-  <div id="resources">
-    <h2>📚 Learning Resources</h2>
-    <div id="resourceList">Select a skill to see resources.</div>
+  <!-- Resources Section -->
+  <div class="resources-section" id="resourcesSection" style="display: none;">
+    <h3>Available Resources</h3>
+    <ul class="resource-list" id="resourceList">
+      <!-- Resources will be dynamically added here -->
+    </ul>
   </div>
 
   <script>
-    const mockResources = {
-      "javascript": [
-        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
-        "https://javascript.info/",
-        "https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/"
-      ],
-      "python": [
-        "https://docs.python.org/3/tutorial/",
-        "https://realpython.com/",
-        "https://www.learnpython.org/"
-      ],
-      "html": [
-        "https://developer.mozilla.org/en-US/docs/Web/HTML",
-        "https://www.w3schools.com/html/",
-        "https://html.com/"
-      ],
-      "css": [
-        "https://developer.mozilla.org/en-US/docs/Web/CSS",
-        "https://css-tricks.com/",
-        "https://www.w3schools.com/css/"
-      ]
-    };
-
-    function loadSkillPage() {
-      const skillName = window.location.pathname.split('/').pop().toLowerCase();
-      const displayName = skillName.charAt(0).toUpperCase() + skillName.slice(1);
-
-      document.getElementById("skillTitle").innerText = `📊 Skill Progress - ${displayName}`;
-
-      const resources = mockResources[skillName];
-
-      const resList = document.getElementById("resourceList");
-
-      if (resources) {
-        resList.innerHTML = `<strong>${displayName} Resources:</strong><ul>` +
-          resources.map(link => `<li><a href="${link}" target="_blank">${link}</a></li>`).join('') +
-          '</ul>';
+    // Get the skill name from the URL (e.g., /SkillProgress/JavaScript)
+    const skillName = window.location.pathname.split("/").pop();
+  
+    document.getElementById("skillTitle").innerText = `${skillName} Progress`;
+  
+    // Fetch the skill progress from localStorage
+    const skills = JSON.parse(localStorage.getItem("skills") || "[]");
+    const skill = skills.find(skill => skill.name === skillName);
+  
+    if (skill) {
+      const progress = skill.progress;
+      const progressFill = document.getElementById("progressFill");
+      const progressBar = document.getElementById("progressBar");
+  
+      progressFill.style.width = `${progress}%`;
+      progressFill.innerText = `${progress}%`;
+  
+      // Now load the resources for the skill
+      const allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
+      console.log("All resources from localStorage:", allResources); // Log the resources
+  
+      const skillResources = allResources[skillName] || [];
+      console.log("Resources for skill", skillName, ":", skillResources); // Log specific skill resources
+  
+      const resourceList = document.getElementById("resourceList");
+      resourceList.innerHTML = "";  // Clear any previous resources
+  
+      if (skillResources.length > 0) {
+        skillResources.forEach(resource => {
+          const li = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = resource;
+          link.target = "_blank";
+          link.innerText = resource;
+          li.appendChild(link);
+          resourceList.appendChild(li);
+        });
+        document.getElementById("resourcesSection").style.display = "block";
       } else {
-        resList.innerHTML = "No resources found for this skill.";
+        // If no resources available, display a message
+        const li = document.createElement("li");
+        li.innerText = "No resources available for this skill.";
+        resourceList.appendChild(li);
+        document.getElementById("resourcesSection").style.display = "block";
       }
+    } else {
+      console.log("Skill not found in localStorage");
     }
-
-    function updateProgress() {
-      let progress = Math.floor(Math.random() * 100);
-      const progressElement = document.getElementById("progressBar");
-      progressElement.innerText = `${progress}%`;
-      progressElement.style.width = `${progress}%`;
-    }
-
-    window.onload = function() {
-      loadSkillPage();
-      setInterval(updateProgress, 5000);
-    };
   </script>
+  
 </body>
 </html>
