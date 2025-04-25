@@ -8,10 +8,12 @@
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #f9f9f9;
+      background-color: #f4f6f9;
     }
     h2 {
       color: #2c3e50;
+      text-align: center;
+      margin-bottom: 20px;
     }
     .progress-bar {
       background-color: #ddd;
@@ -27,11 +29,7 @@
       color: white;
       font-weight: bold;
       background-color: #3498db;
-    }
-    .skill-name {
-      font-weight: bold;
-      font-size: 20px;
-      margin-bottom: 10px;
+      transition: width 0.3s ease;
     }
     .resources-section {
       margin-top: 30px;
@@ -47,6 +45,79 @@
       text-decoration: none;
       color: #3498db;
     }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+    }
+    .modal button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      background-color: #3498db;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      background: #fff;
+      border-collapse: collapse;
+      margin-top: 30px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 15px;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #f3f3f3;
+      color: #333;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tr:hover {
+      background-color: #e0f7fa;
+    }
+    .topic-indent {
+      padding-left: 20px;
+      font-style: italic;
+      color: #7f8c8d;
+    }
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .topic-check {
+      transform: scale(1.2);
+      margin: 0 10px;
+      cursor: pointer;
+    }
+    .topic-check:checked {
+      background-color: #3498db;
+      border: 2px solid #3498db;
+    }
   </style>
 </head>
 <body>
@@ -57,64 +128,138 @@
     <div class="progress-fill" id="progressFill">0%</div>
   </div>
 
-  <!-- Resources Section -->
   <div class="resources-section" id="resourcesSection" style="display: none;">
     <h3>Available Resources</h3>
-    <ul class="resource-list" id="resourceList">
-      <!-- Resources will be dynamically added here -->
-    </ul>
+    <ul class="resource-list" id="resourceList"></ul>
+  </div>
+
+  <div class="resources-section" id="topicsSection">
+    <h3>Topic Checklist</h3>
+    <table id="topicTable">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Topic</th>
+          <th>Completed</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="completionModal" class="modal">
+    <div class="modal-content">
+      <p>Did you complete reviewing the resource?</p>
+      <label><input type="checkbox" id="completedCheck"> Yes, I reviewed it.</label><br>
+      <button onclick="updateProgressFromModal()">Confirm</button>
+    </div>
   </div>
 
   <script>
-    // Get the skill name from the URL (e.g., /SkillProgress/JavaScript)
-    const skillName = window.location.pathname.split("/").pop();
-  
+    const urlParams = new URLSearchParams(window.location.search);
+    const skillName = urlParams.get("skill");
     document.getElementById("skillTitle").innerText = `${skillName} Progress`;
-  
-    // Fetch the skill progress from localStorage
+
     const skills = JSON.parse(localStorage.getItem("skills") || "[]");
-    const skill = skills.find(skill => skill.name === skillName);
-  
-    if (skill) {
-      const progress = skill.progress;
+    const skillIndex = skills.findIndex(skill => skill.name === skillName);
+    const skill = skills[skillIndex] || { name: skillName, progress: 0 };
+
+    function renderProgressBar() {
       const progressFill = document.getElementById("progressFill");
-      const progressBar = document.getElementById("progressBar");
-  
-      progressFill.style.width = `${progress}%`;
-      progressFill.innerText = `${progress}%`;
-  
-      // Now load the resources for the skill
-      const allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
-      console.log("All resources from localStorage:", allResources); // Log the resources
-  
-      const skillResources = allResources[skillName] || [];
-      console.log("Resources for skill", skillName, ":", skillResources); // Log specific skill resources
-  
-      const resourceList = document.getElementById("resourceList");
-      resourceList.innerHTML = "";  // Clear any previous resources
-  
-      if (skillResources.length > 0) {
-        skillResources.forEach(resource => {
-          const li = document.createElement("li");
-          const link = document.createElement("a");
-          link.href = resource;
-          link.target = "_blank";
-          link.innerText = resource;
-          li.appendChild(link);
-          resourceList.appendChild(li);
-        });
-        document.getElementById("resourcesSection").style.display = "block";
-      } else {
-        // If no resources available, display a message
-        const li = document.createElement("li");
-        li.innerText = "No resources available for this skill.";
-        resourceList.appendChild(li);
-        document.getElementById("resourcesSection").style.display = "block";
-      }
-    } else {
-      console.log("Skill not found in localStorage");
+      progressFill.style.width = `${skill.progress}%`;
+      progressFill.innerText = `${skill.progress}%`;
     }
+
+    function renderTopics() {
+      const topics = JSON.parse(localStorage.getItem("skillChecklists"))[skillName] || [];
+      const tbody = document.querySelector("#topicTable tbody");
+      tbody.innerHTML = "";
+
+      const checkedList = JSON.parse(localStorage.getItem(`checked_${skillName}`) || "[]");
+
+      topics.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        const isSubtopic = item.includes("Subtopic"); // Example condition for subtopics
+        const rowClass = isSubtopic ? "topic-indent" : "";
+
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td class="${rowClass}">${item}</td>
+          <td class="checkbox-container">
+            <input type="checkbox" class="topic-check" data-index="${index}" ${checkedList.includes(index) ? "checked" : ""}>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      updateProgressFromChecklist();
+    }
+
+    function updateProgressFromChecklist() {
+      const checkboxes = document.querySelectorAll(".topic-check");
+      let completed = 0;
+      const checkedIndexes = [];
+
+      checkboxes.forEach((box) => {
+        if (box.checked) {
+          completed++;
+          checkedIndexes.push(parseInt(box.getAttribute("data-index")));
+        }
+      });
+
+      const newProgress = Math.round((completed / checkboxes.length) * 100);
+      skill.progress = newProgress;
+      skills[skillIndex] = skill;
+      localStorage.setItem("skills", JSON.stringify(skills));
+      localStorage.setItem(`checked_${skillName}`, JSON.stringify(checkedIndexes));
+      renderProgressBar();
+    }
+
+    function updateProgressFromModal() {
+      document.getElementById("completionModal").style.display = "none";
+      localStorage.removeItem("lastVisitedResource");
+    }
+
+    document.addEventListener("change", function (e) {
+      if (e.target.classList.contains("topic-check")) {
+        updateProgressFromChecklist();
+      }
+    });
+
+    if (skill) {
+      renderProgressBar();
+      renderTopics();
+
+      const allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
+      const skillResources = allResources[skillName] || [];
+      const resourceList = document.getElementById("resourceList");
+      resourceList.innerHTML = "";
+
+      skillResources.forEach(resource => {
+        const li = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = resource;
+        link.target = "_blank";
+        link.innerText = resource;
+
+        link.addEventListener("click", () => {
+          localStorage.setItem("lastVisitedResource", resource);
+        });
+
+        li.appendChild(link);
+        resourceList.appendChild(li);
+      });
+
+      document.getElementById("resourcesSection").style.display = "block";
+    }
+
+    window.onload = function () {
+      const lastVisited = localStorage.getItem("lastVisitedResource");
+      if (lastVisited) {
+        document.getElementById("completionModal").style.display = "block";
+      }
+    };
   </script>
-  
+
 </body>
 </html>

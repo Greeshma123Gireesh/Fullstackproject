@@ -43,10 +43,6 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    h2, h3 {
-      margin-top: 0;
-    }
-
     .inline-select {
       display: flex;
       gap: 10px;
@@ -57,7 +53,6 @@
       flex-grow: 1;
     }
 
-    /* Full-width card for each language */
     .language-cards {
       display: flex;
       flex-direction: column;
@@ -101,7 +96,6 @@
       cursor: pointer;
       margin-left: 10px;
     }
-
   </style>
 </head>
 <body>
@@ -111,7 +105,11 @@
   <div class="section">
     <h3>➕ Add New Language & Resources</h3>
     <input id="language" placeholder="e.g. Python, JavaScript" />
-    <textarea id="resources" rows="6" placeholder="https://example.com/resource1&#10;https://example.com/resource2"></textarea>
+    <textarea id="resources" rows="6" placeholder="https://example.com/resource1\nhttps://example.com/resource2"></textarea>
+
+    <!-- Checklist Input -->
+    <textarea id="checklist" rows="6" placeholder="Topic 1\nTopic 1.1\nTopic 2\n..."></textarea>
+
     <button onclick="saveResources()">Save Resources</button>
   </div>
 
@@ -123,6 +121,7 @@
       <button onclick="loadResourcesToUpdate()">Load</button>
     </div>
     <div id="updateResourcesContainer"></div>
+    <textarea id="updateChecklist" rows="6" placeholder="Edit Checklist Topics/Subtopics"></textarea>
     <button onclick="updateResources()">Update Resources</button>
   </div>
 
@@ -145,6 +144,7 @@
     function saveResources() {
       const lang = document.getElementById("language").value.trim();
       const res = document.getElementById("resources").value.trim().split('\n').filter(Boolean);
+      const checklist = document.getElementById("checklist").value.trim().split('\n').filter(Boolean);
 
       if (!lang || res.length === 0) {
         alert("Please fill both language and resources.");
@@ -152,20 +152,18 @@
       }
 
       let allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
-      
-      // Add new resources if the language doesn't exist yet
-      if (!allResources[lang]) {
-        allResources[lang] = res;
-      } else {
-        // Append new resources if the language exists
-        allResources[lang] = [...allResources[lang], ...res];
-      }
-      
-      localStorage.setItem("skillResources", JSON.stringify(allResources));
+      let allChecklists = JSON.parse(localStorage.getItem("skillChecklists") || "{}");
 
-      alert("Resources saved for " + lang);
+      allResources[lang] = (allResources[lang] || []).concat(res);
+      allChecklists[lang] = (allChecklists[lang] || []).concat(checklist);
+
+      localStorage.setItem("skillResources", JSON.stringify(allResources));
+      localStorage.setItem("skillChecklists", JSON.stringify(allChecklists));
+
+      alert("Resources and checklist saved for " + lang);
       document.getElementById("language").value = "";
       document.getElementById("resources").value = "";
+      document.getElementById("checklist").value = "";
       refreshDropdowns();
       displayLanguages();
     }
@@ -173,9 +171,10 @@
     function loadResourcesToUpdate() {
       const lang = document.getElementById("updateLangSelect").value;
       let allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
+      let allChecklists = JSON.parse(localStorage.getItem("skillChecklists") || "{}");
 
       const updateContainer = document.getElementById("updateResourcesContainer");
-      updateContainer.innerHTML = ''; // Clear previous content
+      updateContainer.innerHTML = '';
 
       if (allResources[lang]) {
         allResources[lang].forEach((resource, index) => {
@@ -186,47 +185,44 @@
           `;
           updateContainer.appendChild(div);
         });
-      } else {
-        updateContainer.innerHTML = "<p>No resources available.</p>";
       }
+
+      document.getElementById("updateChecklist").value = (allChecklists[lang] || []).join('\n');
     }
 
     function removeResource(lang, index) {
       let allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
 
       if (allResources[lang]) {
-        allResources[lang].splice(index, 1); // Remove the resource at the given index
+        allResources[lang].splice(index, 1);
         localStorage.setItem("skillResources", JSON.stringify(allResources));
       }
 
-      loadResourcesToUpdate(); // Refresh the list after removal
+      loadResourcesToUpdate();
     }
 
     function updateResources() {
       const lang = document.getElementById("updateLangSelect").value;
       const updateContainer = document.getElementById("updateResourcesContainer");
+      const checklist = document.getElementById("updateChecklist").value.trim().split('\n').filter(Boolean);
 
       let allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
+      let allChecklists = JSON.parse(localStorage.getItem("skillChecklists") || "{}");
       const updatedResources = [];
 
-      // Collect updated resources from input fields
       const inputs = updateContainer.querySelectorAll('input');
       inputs.forEach(input => {
         const value = input.value.trim();
-        if (value) {
-          updatedResources.push(value);
-        }
+        if (value) updatedResources.push(value);
       });
 
-      if (allResources[lang]) {
-        allResources[lang] = updatedResources;
-      } else {
-        allResources[lang] = updatedResources;
-      }
+      allResources[lang] = updatedResources;
+      allChecklists[lang] = checklist;
 
       localStorage.setItem("skillResources", JSON.stringify(allResources));
+      localStorage.setItem("skillChecklists", JSON.stringify(allChecklists));
 
-      alert("Resources updated for " + lang);
+      alert("Resources and checklist updated for " + lang);
       displayLanguages();
     }
 
@@ -234,8 +230,13 @@
       const lang = document.getElementById("deleteLangSelect").value;
 
       let allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
+      let allChecklists = JSON.parse(localStorage.getItem("skillChecklists") || "{}");
+
       delete allResources[lang];
+      delete allChecklists[lang];
+
       localStorage.setItem("skillResources", JSON.stringify(allResources));
+      localStorage.setItem("skillChecklists", JSON.stringify(allChecklists));
 
       alert(lang + " has been deleted.");
       refreshDropdowns();
@@ -263,6 +264,7 @@
 
     function displayLanguages() {
       const allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
+      const allChecklists = JSON.parse(localStorage.getItem("skillChecklists") || "{}");
       const list = document.getElementById("languageList");
       list.innerHTML = "";
 
@@ -270,16 +272,20 @@
         const card = document.createElement("div");
         card.classList.add("language-card");
 
+        const checklist = allChecklists[lang] || [];
+
         card.innerHTML = `
           <h4>${lang}</h4>
+          <strong>Resources:</strong>
           <ul>${resources.map(r => `<li><a href="${r}" target="_blank">${r}</a></li>`).join('')}</ul>
+          <strong>Checklist:</strong>
+          <ul>${checklist.map(item => `<li>${item}</li>`).join('')}</ul>
         `;
 
         list.appendChild(card);
       });
     }
 
-    // Initial setup
     refreshDropdowns();
     displayLanguages();
   </script>
