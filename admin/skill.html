@@ -10,7 +10,6 @@
       background-color: #eef2f5;
       color: #333;
     }
-
     input, textarea, button, select {
       display: block;
       width: 100%;
@@ -20,7 +19,6 @@
       border: 1px solid #ccc;
       border-radius: 8px;
     }
-
     button {
       width: auto;
       background-color: #007bff;
@@ -30,11 +28,9 @@
       border-radius: 8px;
       padding: 10px 16px;
     }
-
     button:hover {
       background-color: #0056b3;
     }
-
     .section {
       background-color: white;
       padding: 25px;
@@ -42,23 +38,19 @@
       margin-bottom: 30px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-
     .inline-select {
       display: flex;
       gap: 10px;
       align-items: center;
     }
-
     .inline-select select {
       flex-grow: 1;
     }
-
     .language-cards {
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-
     .language-card {
       background-color: #fff;
       padding: 20px;
@@ -67,53 +59,47 @@
       width: 100%;
       box-sizing: border-box;
     }
-
     .language-card h4 {
       margin-top: 0;
       margin-bottom: 10px;
     }
-
     .language-card ul {
       list-style-type: none;
       padding: 0;
     }
-
     .language-card ul li {
       margin-bottom: 10px;
     }
-
     .language-card ul li a {
       color: #007bff;
       text-decoration: none;
     }
-
     .language-card ul li a:hover {
       text-decoration: underline;
     }
-
     .remove-btn {
       color: red;
       cursor: pointer;
       margin-left: 10px;
+    }
+    .subtopic {
+      margin-left: 20px;
+      font-weight: normal;
+      color: #555;
     }
   </style>
 </head>
 <body>
   <h2>🔧 Admin Panel: Manage Learning Resources</h2>
 
-  <!-- Add New Language and Resources -->
   <div class="section">
     <h3>➕ Add New Language & Resources</h3>
     <input id="language" placeholder="e.g. Python, JavaScript" />
     <textarea id="resources" rows="6" placeholder="https://example.com/resource1\nhttps://example.com/resource2"></textarea>
-
-    <!-- Checklist Input -->
-    <textarea id="checklist" rows="6" placeholder="Topic 1\nTopic 1.1\nTopic 2\n..."></textarea>
-
+    <textarea id="checklist" rows="6" placeholder="Main Topic\n  Subtopic 1\n  Subtopic 2\nAnother Main Topic"></textarea>
     <button onclick="saveResources()">Save Resources</button>
   </div>
 
-  <!-- Update Existing Language Resources -->
   <div class="section">
     <h3>🔄 Update Existing Language Resources</h3>
     <div class="inline-select">
@@ -125,7 +111,6 @@
     <button onclick="updateResources()">Update Resources</button>
   </div>
 
-  <!-- Delete Language -->
   <div class="section">
     <h3>🗑 Delete Language</h3>
     <div class="inline-select">
@@ -134,7 +119,6 @@
     </div>
   </div>
 
-  <!-- Display Resources -->
   <div class="section">
     <h3>📋 All Languages & Resources</h3>
     <div class="language-cards" id="languageList"></div>
@@ -274,12 +258,20 @@
 
         const checklist = allChecklists[lang] || [];
 
+        const checklistHtml = checklist.map(item => {
+          if (item.startsWith('  ') || item.startsWith('- ')) {
+            return `<li class="subtopic">${item.trim()}</li>`;
+          } else {
+            return `<li><strong>${item}</strong></li>`;
+          }
+        }).join('');
+
         card.innerHTML = `
           <h4>${lang}</h4>
           <strong>Resources:</strong>
           <ul>${resources.map(r => `<li><a href="${r}" target="_blank">${r}</a></li>`).join('')}</ul>
           <strong>Checklist:</strong>
-          <ul>${checklist.map(item => `<li>${item}</li>`).join('')}</ul>
+          <ul>${checklistHtml}</ul>
         `;
 
         list.appendChild(card);

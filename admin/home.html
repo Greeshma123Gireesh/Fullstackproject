@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #ecf0f3;
+      color: #2c3e50;
+    }
+
+    .navbar {
+      background-color: #4B7BEC;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .navbar .logo {
+      font-size: 26px;
+      font-weight: bold;
+    }
+    .logout {
+      background: #ff4d4f;
+      border: none;
+      padding: 8px 18px;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .logout:hover {
+      background: #e84142;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 40px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+      text-align: center;
+    }
+
+    .container h1 {
+      font-size: 30px;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    .button-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .btn {
+      width: 80%;
+      max-width: 350px;
+      padding: 16px;
+      font-size: 18px;
+      background-color: #4B7BEC;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+
+    .btn:hover {
+      background-color: #3f6ae0;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    @media (max-width: 500px) {
+      .btn {
+        width: 90%;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="logo">Admin Dashboard</div>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<!-- Main Container -->
+<div class="container">
+  <h1>Welcome Admin</h1>
+  <div class="button-grid">
+    <button class="btn" onclick="location.href='skill.html'">📋 Manage Jobs</button>
+    <button class="btn" onclick="location.href='guidlines.html'">📖 Manage Guidelines</button>
+    <button class="btn" onclick="location.href='view_users.html'">👥 View Users</button>
+  </div>
+</div>
+
+<script>
+  function logout() {
+    alert("Logged out!");
+    window.location.href = "index.html";
+  }
+</script>
+
+</body>
+</html>

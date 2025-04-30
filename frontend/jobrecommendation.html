@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Job Recommendations</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; }
+
+    .navbar {
+      width: 100vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      background-color: #333;
+      color: white;
+    }
+    .left-section { display: flex; align-items: center; gap: 40px; }
+    .logo { font-size: 24px; font-weight: bold; }
+    .home-link { font-size: 18px; color: white; text-decoration: none; }
+    .home-link:hover { text-decoration: underline; }
+    .right-section { display: flex; align-items: center; gap: 20px; }
+    .account { position: relative; cursor: pointer; }
+    .dropdown-content {
+      display: none; position: absolute; right: 0;
+      background-color: white; color: black;
+      min-width: 160px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      border-radius: 5px; overflow: hidden; z-index: 1;
+    }
+    .dropdown-content a {
+      padding: 12px 16px; display: block; text-decoration: none; color: black;
+    }
+    .dropdown-content a:hover { background-color: #f1f1f1; }
+    .account:hover .dropdown-content { display: block; }
+
+    .resume-section {
+      margin-left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .upload-btn {
+      background-color: #555;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .upload-btn:hover {
+      background-color: #777;
+    }
+
+    /* Page specific styles */
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: #f9f9f9;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="left-section">
+    <div class="logo">Dream Job Finder</div>
+    <a href="index.html" class="home-link">Home</a>
+  </div>
+
+  <div class="right-section">
+    <div class="resume-section">
+      <label id="resumeName">No Resume</label>
+      <input type="file" id="resumeInput" style="display:none;" accept="application/pdf">
+      <button class="upload-btn" onclick="document.getElementById('resumeInput').click()">Upload/Change</button>
+    </div>
+    <div class="account">
+      Account
+      <div class="dropdown-content">
+        <a href="#">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+  <h1>Recommended Jobs for You</h1>
+  <ul id="recommendationList">
+    <!-- Recommended jobs will be shown here -->
+  </ul>
+</div>
+
+<script>
+  const resumeInput = document.getElementById('resumeInput');
+  const resumeName = document.getElementById('resumeName');
+
+  // Load saved resume name
+  if (localStorage.getItem('resumeName')) {
+    resumeName.textContent = localStorage.getItem('resumeName');
+  }
+
+  resumeInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        localStorage.setItem('resume', e.target.result);
+        localStorage.setItem('resumeName', file.name);
+        resumeName.textContent = file.name;
+        alert("Resume uploaded and saved!");
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function logout() {
+    alert("Logged out!");
+    window.location.href = "index.html";
+  }
+
+  // Mock recommendation logic (replace with API call)
+  const recommendedJobs = JSON.parse(localStorage.getItem('jobs')) || [];
+  
+  const recommendationList = document.getElementById('recommendationList');
+  recommendedJobs.forEach(job => {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${job.jobTitle}</strong><br>Skills: ${Array.isArray(job.skills) ? job.skills.join(", ") : job.skills}<br>Match: ${job.matchPercentage}%<br><a href="${job.jobLink}" target="_blank">Apply Here</a>`;
+    recommendationList.appendChild(li);
+  });
+</script>
+
+</body>
+</html>

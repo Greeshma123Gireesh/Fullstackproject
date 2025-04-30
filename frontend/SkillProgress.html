@@ -7,116 +7,153 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 20px;
-      background-color: #f4f6f9;
-    }
-    h2 {
+      padding: 30px;
+      background-color: #f0f2f5;
       color: #2c3e50;
-      text-align: center;
-      margin-bottom: 20px;
     }
+
+    h2 {
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
     .progress-bar {
-      background-color: #ddd;
-      border-radius: 20px;
+      background-color: #dfe6e9;
+      border-radius: 30px;
       overflow: hidden;
-      height: 20px;
+      height: 24px;
       margin-top: 20px;
     }
+
     .progress-fill {
       height: 100%;
       text-align: center;
-      line-height: 20px;
+      line-height: 24px;
       color: white;
       font-weight: bold;
-      background-color: #3498db;
+      background: linear-gradient(to right, #3498db, #2980b9);
       transition: width 0.3s ease;
     }
-    .resources-section {
-      margin-top: 30px;
+
+    h3 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #34495e;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
     }
+
     .resource-list {
-      list-style-type: none;
+      list-style: none;
       padding-left: 20px;
     }
+
     .resource-list li {
-      margin-bottom: 5px;
+      margin: 8px 0;
     }
+
     .resource-list a {
-      text-decoration: none;
       color: #3498db;
+      text-decoration: none;
+      transition: color 0.3s ease;
     }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.5);
+
+    .resource-list a:hover {
+      color: #1d6fa5;
     }
-    .modal-content {
-      background-color: #fff;
-      margin: 15% auto;
-      padding: 20px;
-      border-radius: 8px;
-      width: 300px;
-      text-align: center;
-    }
-    .modal button {
-      margin-top: 10px;
-      padding: 8px 12px;
-      border: none;
-      background-color: #3498db;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+
     table {
       width: 100%;
       background: #fff;
       border-collapse: collapse;
-      margin-top: 30px;
+      margin-top: 15px;
       border-radius: 8px;
       overflow: hidden;
     }
+
     table, th, td {
-      border: 1px solid #ddd;
+      border: 1px solid #ececec;
     }
+
     th, td {
-      padding: 15px;
+      padding: 14px;
       text-align: left;
-      font-size: 14px;
+      font-size: 15px;
     }
+
     th {
-      background-color: #f3f3f3;
+      background-color: #f3f6f9;
       color: #333;
     }
+
     tr:nth-child(even) {
-      background-color: #f9f9f9;
+      background-color: #fafafa;
     }
+
     tr:hover {
-      background-color: #e0f7fa;
+      background-color: #e3f2fd;
     }
+
     .topic-indent {
       padding-left: 20px;
       font-style: italic;
       color: #7f8c8d;
     }
+
     .checkbox-container {
       display: flex;
-      align-items: center;
       justify-content: center;
     }
+
     .topic-check {
-      transform: scale(1.2);
-      margin: 0 10px;
+      transform: scale(1.3);
       cursor: pointer;
     }
-    .topic-check:checked {
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 25px;
+      border-radius: 10px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-content button {
+      margin-top: 15px;
+      padding: 10px 20px;
       background-color: #3498db;
-      border: 2px solid #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .modal-content input {
+      transform: scale(1.1);
+      margin-right: 10px;
     }
   </style>
 </head>
@@ -124,17 +161,19 @@
 
   <h2 id="skillTitle">Skill Progress</h2>
 
-  <div class="progress-bar" id="progressBar">
-    <div class="progress-fill" id="progressFill">0%</div>
+  <div class="section-card">
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill">0%</div>
+    </div>
   </div>
 
-  <div class="resources-section" id="resourcesSection" style="display: none;">
-    <h3>Available Resources</h3>
+  <div class="section-card" id="resourcesSection" style="display: none;">
+    <h3>📚 Available Resources</h3>
     <ul class="resource-list" id="resourceList"></ul>
   </div>
 
-  <div class="resources-section" id="topicsSection">
-    <h3>Topic Checklist</h3>
+  <div class="section-card" id="topicsSection">
+    <h3>✅ Topic Checklist</h3>
     <table id="topicTable">
       <thead>
         <tr>
@@ -179,12 +218,12 @@
 
       topics.forEach((item, index) => {
         const tr = document.createElement("tr");
-        const isSubtopic = item.includes("Subtopic"); // Example condition for subtopics
+        const isSubtopic = item.startsWith("-");
         const rowClass = isSubtopic ? "topic-indent" : "";
 
         tr.innerHTML = `
           <td>${index + 1}</td>
-          <td class="${rowClass}">${item}</td>
+          <td class="${rowClass}">${item.replace(/^-/, '').trim()}</td>
           <td class="checkbox-container">
             <input type="checkbox" class="topic-check" data-index="${index}" ${checkedList.includes(index) ? "checked" : ""}>
           </td>
@@ -250,7 +289,9 @@
         resourceList.appendChild(li);
       });
 
-      document.getElementById("resourcesSection").style.display = "block";
+      if (skillResources.length > 0) {
+        document.getElementById("resourcesSection").style.display = "block";
+      }
     }
 
     window.onload = function () {
