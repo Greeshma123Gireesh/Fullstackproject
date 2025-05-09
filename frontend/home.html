@@ -5,207 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Job Portal</title>
   <link rel="stylesheet" href="style/homestyle.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa;
-    }
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background: linear-gradient(90deg, #37474F, #263238);
-      color: white;
-    }
-    .logo {
-      font-size: 26px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-    .right-section {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .welcome-message {
-      font-size: 16px;
-    }
-    .account {
-      position: relative;
-      cursor: pointer;
-    }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      right: 0;
-      background-color: white;
-      color: black;
-      min-width: 160px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      z-index: 1;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-    .dropdown-content a {
-      padding: 12px 16px;
-      display: block;
-      text-decoration: none;
-      color: black;
-    }
-    .dropdown-content a:hover {
-      background-color: #f1f1f1;
-    }
-    .account:hover .dropdown-content {
-      display: block;
-    }
-
-    .hero-section {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #eef1e6;
-      padding: 60px 30px;
-      flex-wrap: wrap;
-    }
-    .hero-text {
-      flex: 1;
-      min-width: 300px;
-      padding: 20px;
-    }
-    .hero-text h1 {
-      font-size: 48px;
-      color: #222;
-      margin: 0 0 10px;
-    }
-    .hero-text span {
-      color: #000;
-      font-weight: bold;
-    }
-    .hero-text p {
-      font-size: 20px;
-      color: #555;
-    }
-    .hero-image {
-      flex: 1;
-      min-width: 300px;
-      padding: 20px;
-      text-align: center;
-    }
-    .hero-image img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 10px;
-    }
-
-    .container {
-      padding: 40px 20px;
-    }
-    .three-boxes {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 40px;
-    margin-top: 40px;
-  }
-  .box {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 320px;
-    text-align: center;
-    cursor: pointer;
-  }
-  .box:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-  }
-  .box img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-  }
-  .box p {
-    margin: 15px 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: #37474F;
-    padding: 0 10px 20px;
-  }
-    /* Full Width Content and Slideshow Section */
-    .content-image-section {
-      width: 100vw;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(90deg, #000000, #222222);
-      margin: 0;
-      padding: 60px 20px;
-      flex-wrap: wrap;
-      box-sizing: border-box;
-    }
-    .content {
-      flex: 1;
-      padding: 20px;
-      color: white;
-    }
-    .content h2 {
-      font-size: 36px;
-      margin-bottom: 15px;
-      color: white;
-    }
-    .content p {
-      font-size: 18px;
-      color: #cccccc;
-    }
-    .image-slide {
-      flex: 1;
-      text-align: center;
-    }
-    .image-slide img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 10px;
-    }
-
-    .reviews {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin-top: 60px;
-    }
-    .review-card {
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      width: 280px;
-      text-align: center;
-    }
-    .review-card::before {
-      content: "💬";
-      font-size: 30px;
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .footer {
-      background-color: #263238;
-      color: white;
-      text-align: center;
-      padding: 15px;
-      margin-top: 60px;
-    }
-  </style>
 </head>
 <body>
   <div class="navbar">
-    <div class="logo">Career Path</div>
-    <div class="right-section">
+    <div class="logo">
+        <a href="home.html">
+          <img src="images/logo.png" alt="Career Path Logo" />
+        </a>
+      </div>
+      
+          <div class="right-section">
       <div class="welcome-message" id="welcomeUser">Welcome, User</div>
       <div class="account">
         Account
@@ -217,7 +26,6 @@
     </div>
   </div>
 
-  <!-- Hero Section -->
   <div class="hero-section">
     <div class="hero-text">
       <h1>Career <span>Growth</span> and Skill Mapping</h1>
@@ -228,7 +36,6 @@
     </div>
   </div>
 
-  <!-- Feature Boxes -->
   <div class="container">
     <div class="three-boxes">
       <div class="box">
@@ -244,9 +51,8 @@
         </a>
       </div>
     </div>
-  </div> <!-- End of container -->
+  </div> 
 
-  <!-- Full Width Content and Slideshow Section -->
   <div class="content-image-section">
     <div class="content">
       <h2>Explore Career Opportunities</h2>
@@ -257,7 +63,7 @@
     </div>
   </div>
 
-  <!-- Reviews -->
+  
   <div class="container">
     <div class="reviews">
       <div class="review-card">⭐ “This portal guided me to the perfect job!”</div>
@@ -266,32 +72,11 @@
     </div>
   </div>
 
-  <!-- Footer -->
+
   <div class="footer">
-    About Us | Contact Us | © 2025 CareerPath. All rights reserved.
+     © 2025. All rights reserved.
   </div>
 
-  <script>
-    // Welcome message
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      document.getElementById('welcomeUser').innerText = `Welcome, ${storedUser.firstName}`;
-    }
-
-    // Logout function
-    function logout() {
-      localStorage.removeItem('user');
-      alert("You have been logged out!");
-      window.location.href = "index.html";
-    }
-
-    // Image Slideshow in the black section
-    const images = ["images/slide1.jpeg", "images/slide2.jpeg", "images/slide3.jpeg"];
-    let index = 0;
-    setInterval(() => {
-      index = (index + 1) % images.length;
-      document.getElementById("changingImage").src = images[index];
-    }, 3000);
-  </script>
+  <script src="js/home.js"></script>
 </body>
 </html>

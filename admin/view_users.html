@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Users</title>
+
+  <link rel="stylesheet" href="style/viewusers.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+          <img src="images/logo.png" alt="Logo">
+          <button onclick="window.location.href = '/admin/home.html'">Home</button>
+        </div>
+        <button class="logout" onclick="logout()">Logout</button>
+      </div>
+<div class="container">
+  <h1>List of Users</h1>
+
+  <table id="users-table">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody id="users-list">
+      
+    </tbody>
+  </table>
+
+ 
+  <a href="/admin/home.html" class="back-button">Back to Admin Dashboard</a>
+</div>
+
+<script src="js/viewusers.js">
+
+</script>
+
+</body>
+</html>

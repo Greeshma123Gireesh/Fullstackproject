@@ -20,19 +20,15 @@ function showsignup() {
     const password = document.getElementById("signup-password").value.trim();
     const confirmPassword = document.getElementById("confirmpassword").value.trim();
   
-    // Password confirmation check
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
   
-    // Save user details to localStorage
     const userDetails = { firstName, lastName, email, password };
     localStorage.setItem("user", JSON.stringify(userDetails));
   
     alert("Signup successful!");
-  
-    // Redirect to profile page after signup
     window.location.href = "profile.html";
   });
   
@@ -40,17 +36,22 @@ function showsignup() {
   document.getElementById("loginform").addEventListener("submit", function (e) {
     e.preventDefault();
   
-    const emailInput = document.getElementById("username").value.trim(); // Email entered during login
-    const passwordInput = document.getElementById("login-password").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("login-password").value.trim();
   
-    // Retrieve user details from localStorage
+    // Admin check
+    if (username === "admin" && password === "admin") {
+      alert("Admin login successful!");
+      window.location.href = "/admin/home.html";
+      return;
+    }
+  
+    // Normal user login
     const storedUser = JSON.parse(localStorage.getItem("user"));
   
     if (storedUser) {
-      if (storedUser.email === emailInput && storedUser.password === passwordInput) {
+      if (storedUser.email === username && storedUser.password === password) {
         alert("Login successful!");
-  
-        // Redirect to home page
         window.location.href = "home.html";
       } else {
         alert("Invalid email or password!");

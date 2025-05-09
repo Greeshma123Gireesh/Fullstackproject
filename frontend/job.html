@@ -3,93 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>Job Detail</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f4; }
-
-    .navbar {
-      width: 100vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 30px;
-      background-color: #333;
-      color: white;
-    }
-    .left-section { display: flex; align-items: center; gap: 40px; }
-    .logo { font-size: 24px; font-weight: bold; }
-    .home-link { font-size: 18px; color: white; text-decoration: none; }
-    .home-link:hover { text-decoration: underline; }
-    .right-section { display: flex; align-items: center; gap: 20px; }
-    .account { position: relative; cursor: pointer; }
-    .dropdown-content {
-      display: none; position: absolute; right: 0;
-      background-color: white; color: black;
-      min-width: 160px; box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-      border-radius: 5px; overflow: hidden; z-index: 1;
-    }
-    .dropdown-content a {
-      padding: 12px 16px; display: block; text-decoration: none; color: black;
-    }
-    .dropdown-content a:hover { background-color: #f1f1f1; }
-    .account:hover .dropdown-content { display: block; }
-
-    .resume-section {
-      margin-left: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .upload-btn {
-      background-color: #555;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .upload-btn:hover {
-      background-color: #777;
-    }
-
-    .container {
-      max-width: 800px; margin: 60px auto 0 auto;
-      background: #fff; padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h1, h3 { color: #2c3e50; }
-    p { line-height: 1.6; }
-    .section { margin-bottom: 20px; }
-    #skillAnalysis {
-      margin-top: 20px; padding: 15px;
-      background: #f9f9f9; border-radius: 8px;
-    }
-    .btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: #3498db;
-      color: white; border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .btn:hover { background: #2980b9; }
-  </style>
+  <link rel="stylesheet" href="style/job.css">
 </head>
 <body>
 
 <!-- Navbar -->
 <div class="navbar">
   <div class="left-section">
-    <div class="logo">Dream Job Finder</div>
+    <div class="logo">
+      <a href="home.html">
+        <img src="images/logo.png" alt="Career Path Logo" />
+      </a>
+    </div>
     <a href="index.html" class="home-link">Home</a>
   </div>
 
   <div class="right-section">
     <div class="resume-section">
-      <label id="resumeName">No Resume</label>
       <input type="file" id="resumeInput" style="display:none;" accept="application/pdf">
       <button class="upload-btn" onclick="document.getElementById('resumeInput').click()">Upload/Change</button>
+      <span id="resumeName">No Resume</span>
     </div>
     <div class="account">
       Account
@@ -103,14 +36,36 @@
 
 <!-- Main Container -->
 <div class="container">
-  <h1 id="jobTitle">Loading...</h1>
-  <div class="section">
-    <h3>Description:</h3>
-    <p id="jobDescription"></p>
-  </div>
+  <h1 id="jobTitle">Job Detail</h1>
+
   <div class="section">
     <h3>Required Skills:</h3>
-    <p id="jobSkills"></p>
+    <div id="jobSkills" class="content-block"></div>
+  </div>
+
+  <div class="section">
+    <h3>What to Learn (Skills and Concepts):</h3>
+    <div id="jobDescription" class="content-block"></div>
+  </div>
+
+  <div class="section">
+    <h3>How to Achieve It:</h3>
+    <div id="achieveHow" class="content-block"></div>
+  </div>
+
+  <div class="section">
+    <h3>Roadmap:</h3>
+    <div id="roadmap" class="content-block"></div>
+  </div>
+
+  <div class="section">
+    <h3>Salary Range:</h3>
+    <div id="salary" class="content-block"></div>
+  </div>
+
+  <div class="section">
+    <h3>Top Companies Hiring:</h3>
+    <div id="companies" class="content-block"></div>
   </div>
 
   <hr>
@@ -121,108 +76,14 @@
     <div id="skillAnalysis"></div>
   </div>
 
-  <a href="index.html">&larr; Back to Job List</a>
+  <a href="index.html" class="back-link">&larr; Back to Job List</a>
+</div>
+<div class="footer">
+  © 2025. All rights reserved.
 </div>
 
-<script>
-  const resumeInput = document.getElementById('resumeInput');
-  const resumeName = document.getElementById('resumeName');
-
-  // Load saved resume name
-  if (localStorage.getItem('resumeName')) {
-    resumeName.textContent = localStorage.getItem('resumeName');
-  }
-
-  resumeInput.addEventListener('change', function() {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        localStorage.setItem('resume', e.target.result);
-        localStorage.setItem('resumeName', file.name);
-        resumeName.textContent = file.name;
-        alert("Resume uploaded and saved!");
-      }
-      reader.readAsDataURL(file);
-    }
-  });
-
-  function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-  }
-
-  const title = getQueryParam("title");
-  const jobs = JSON.parse(localStorage.getItem('jobs')) || [];
-  const job = jobs.find(j => j.jobTitle === title);
-
-  if (job) {
-    document.getElementById("jobTitle").textContent = job.jobTitle;
-    document.getElementById("jobDescription").textContent = job.learnWhat || "No description available.";
-    document.getElementById("jobSkills").textContent = Array.isArray(job.skills) ? job.skills.join(", ") : job.skills;
-  } else {
-    document.querySelector(".container").innerHTML = `
-      <h2>Job not found</h2>
-      <a href='index.html'>&larr; Back to job list</a>
-    `;
-  }
-
-  function analyzeSkills() {
-    const resumeData = localStorage.getItem('resume');
-    if (!resumeData) {
-      alert("Please upload your resume first!");
-      return;
-    }
-
-    const formData = new FormData();
-    const blob = dataURLtoBlob(resumeData);
-    formData.append('resume', blob, localStorage.getItem('resumeName') || 'resume.pdf');
-
-    // Send the resume to the Flask API for skill extraction
-    fetch('http://127.0.0.1:5000/analyze', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.extracted_skills) {
-        const requiredSkills = Array.isArray(job.skills) ? job.skills : job.skills.split(",");
-
-        const missingSkills = requiredSkills.filter(skill =>
-          !data.extracted_skills.map(s => s.toLowerCase().trim()).includes(skill.toLowerCase().trim())
-        );
-
-        document.getElementById("skillAnalysis").innerHTML = `
-          <p><strong>Extracted Skills from Resume:</strong> ${data.extracted_skills.join(", ")}</p>
-          <p><strong>Missing Skills for this Job:</strong> ${missingSkills.length ? missingSkills.join(", ") : "None! You match all skills."}</p>
-        `;
-      } else {
-        alert('Error analyzing resume skills');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Error analyzing resume skills');
-    });
-  }
-
-  // Helper to convert data URL back to Blob
-  function dataURLtoBlob(dataurl) {
-    const arr = dataurl.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while(n--){
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], {type:mime});
-  }
-
-  function logout() {
-    alert("Logged out!");
-    window.location.href = "index.html";
-  }
+<script src="js/job.js">
+  
 </script>
 
 </body>

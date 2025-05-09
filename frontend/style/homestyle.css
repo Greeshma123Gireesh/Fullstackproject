@@ -1,82 +1,204 @@
 body {
     margin: 0;
-    padding: 0;
-    text-align: center;
-    background-color: linear-gradient(to right, #c9d6ff, #e2e2e2);
-}
-
-.search-bar input {
-    padding: 5px;
-    width: 300px;
-}
-
-.account {
-    cursor: pointer;
-}
-
-.container {
-    width: 80%;
-    margin: 20px auto;
-}
-
-.three-boxes {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+  }
+  .navbar {
     display: flex;
     justify-content: space-between;
-    margin: 20px 0;
-}
-
-.box {
-    border: 1px solid #ccc;
-    width: 30%;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #37474F, #263238);
+    color: white;
+  }
+  .logo {
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .right-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .welcome-message {
+    font-size: 16px;
+  }
+  .account {
+    position: relative;
+    cursor: pointer;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    color: black;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
     overflow: hidden;
-}
-
-.box img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.box a {
+  }
+  .dropdown-content a {
+    padding: 12px 16px;
+    display: block;
     text-decoration: none;
     color: black;
+  }
+  .dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
+  .account:hover .dropdown-content {
     display: block;
-    width: 100%;
-    height: 100%;
-}
+  }
 
-.slideshow {
-    width: 100%;
-    height: 300px;
-    background-color: rgba(255, 255, 255, 0.2);
+  .hero-section {
     display: flex;
     align-items: center;
     justify-content: center;
-}
+    background: #eef1e6;
+    padding: 60px 30px;
+    flex-wrap: wrap;
+  }
+  .hero-text {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+  }
+  .hero-text h1 {
+    font-size: 48px;
+    color: #222;
+    margin: 0 0 10px;
+  }
+  .hero-text span {
+    color: #000;
+    font-weight: bold;
+  }
+  .hero-text p {
+    font-size: 20px;
+    color: #555;
+  }
+  .hero-image {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    text-align: center;
+  }
+  .hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
 
-.reviews {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 10px;
-    margin: 20px 0;
+  .container {
+    padding: 40px 20px;
+  }
+  .three-boxes {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 40px;
 }
-
-.review-card {
-    border: 1px solid #ccc;
-    padding: 10px;
+.box {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 320px;
+  text-align: center;
+  cursor: pointer;
 }
-
-.stars {
-    color: gold;
+.box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
 }
-
-.footer {
-    background-color: #333;
+.box img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+.box p {
+  margin: 15px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #37474F;
+  padding: 0 10px 20px;
+}
+  /* Full Width Content and Slideshow Section */
+  .content-image-section {
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, #000000, #222222);
+    margin: 0;
+    padding: 60px 20px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+  }
+  .content {
+    flex: 1;
+    padding: 20px;
     color: white;
-    padding: 10px;
-    margin-top: 20px;
-}
+  }
+  .content h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: white;
+  }
+  .content p {
+    font-size: 18px;
+    color: #cccccc;
+  }
+  .image-slide {
+    flex: 1;
+    text-align: center;
+  }
+  .image-slide img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  .reviews {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 60px;
+  }
+  .review-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 280px;
+    text-align: center;
+  }
+  .review-card::before {
+    content: "💬";
+    font-size: 30px;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .footer {
+    background-color: #263238;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 60px;
+  }
+  .logo img {
+width: 50px; 
+height: auto; }
+.footer {
+    background-color: #263238;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 60px;
+  }

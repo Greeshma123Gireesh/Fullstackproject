@@ -1,201 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Job</title>
-    <style>
-        /* Basic reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7fc;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #4f5d73;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-weight: bold;
-            margin: 10px 0 5px;
-            color: #555;
-        }
-
-        input[type="text"], textarea {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 15px;
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="text"]:focus, textarea:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 14px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        h2 {
-            margin-top: 30px;
-            font-size: 22px;
-            color: #333;
-        }
-
-        .job-card {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .job-card h3 {
-            margin-bottom: 10px;
-            color: #007bff;
-            font-size: 20px;
-        }
-
-        .job-card p {
-            margin: 5px 0;
-            line-height: 1.6;
-        }
-
-        .job-card strong {
-            color: #333;
-        }
-
-        .no-jobs {
-            text-align: center;
-            color: #777;
-            font-size: 18px;
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <title>Add New Job</title>
+  <link rel="stylesheet" href="style/guidliness.css">
 </head>
 <body>
+    <div class="navbar">
+        <div class="logo">
+          <img src="images/logo.png" alt="Logo">
+          <button onclick="window.location.href = '/admin/home.html'">Home</button>
+        </div>
+        <button class="logout" onclick="logout()">Logout</button>
+      </div>
+  <div class="container">
+    <h1>Add New Job</h1>
+    <form id="addJobForm">
+      <label for="jobTitle">Job Title:</label>
+      <input type="text" id="jobTitle" required>
 
-    <div class="container">
-        <h1>Add New Job</h1>
+      <label for="skills">Skills Required:</label>
+      <textarea id="skills" required></textarea>
 
-        <!-- Job Form -->
-        <form id="addJobForm">
-            <label for="jobTitle">Job Title:</label>
-            <input type="text" id="jobTitle" name="jobTitle" placeholder="e.g., AI/ML Engineer" required>
+      <label for="learnWhat">What to Learn:</label>
+      <textarea id="learnWhat" required></textarea>
 
-            <label for="skills">Skills Required:</label>
-            <input type="text" id="skills" name="skills" placeholder="e.g., Python, TensorFlow" required>
+      <label for="achieveHow">How to Achieve:</label>
+      <textarea id="achieveHow" required></textarea>
 
-            <label for="learnWhat">What to Learn:</label>
-            <textarea id="learnWhat" name="learnWhat" placeholder="e.g., Learn ML algorithms, TensorFlow" required></textarea>
+      <label for="roadmap">Roadmap:</label>
+      <textarea id="roadmap" required></textarea>
 
-            <label for="achieveHow">How to Achieve:</label>
-            <textarea id="achieveHow" name="achieveHow" placeholder="e.g., Take courses, join Kaggle" required></textarea>
+      <label for="salary">Salary Range:</label>
+      <textarea id="salary" required></textarea>
 
-            <button type="submit">Add Job</button>
-        </form>
+      <label for="companies">Top Companies:</label>
+      <textarea id="companies" required></textarea>
 
-        <h2>Added Jobs:</h2>
-        <div id="jobsList"></div>
-    </div>
+      <button type="submit">Add Job</button>
+    </form>
 
-    <script>
-        // Function to save job data to local storage
-        function saveJobToLocalStorage(jobData) {
-            // Get existing jobs from local storage or initialize empty array
-            let jobs = JSON.parse(localStorage.getItem('jobs')) || [];
-            jobs.push(jobData); // Add the new job
-            localStorage.setItem('jobs', JSON.stringify(jobs)); // Save back to local storage
-        }
+    <h2>Added Jobs:</h2>
+    <div id="jobsList"></div>
+  </div>
 
-        // Handle form submission
-        document.getElementById('addJobForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const jobData = {
-                jobTitle: document.getElementById('jobTitle').value,
-                skills: document.getElementById('skills').value,
-                learnWhat: document.getElementById('learnWhat').value,
-                achieveHow: document.getElementById('achieveHow').value,
-            };
-
-            // Save the job data to local storage
-            saveJobToLocalStorage(jobData);
-
-            // Refresh the job list
-            displayJobs();
-        });
-
-        // Fetch and display all jobs from local storage
-        function displayJobs() {
-            const jobsList = document.getElementById('jobsList');
-            jobsList.innerHTML = ''; // Clear the list
-
-            let jobs = JSON.parse(localStorage.getItem('jobs')) || []; // Get jobs from local storage
-
-            if (jobs.length === 0) {
-                jobsList.innerHTML = '<p class="no-jobs">No jobs added yet!</p>';
-            } else {
-                jobs.forEach(job => {
-                    const jobCard = document.createElement('div');
-                    jobCard.classList.add('job-card');
-                    jobCard.innerHTML = `
-                        <h3>${job.jobTitle}</h3>
-                        <p><strong>Skills Required:</strong> ${job.skills}</p>
-                        <p><strong>What to Learn:</strong> ${job.learnWhat}</p>
-                        <p><strong>How to Achieve:</strong> ${job.achieveHow}</p>
-                    `;
-                    jobsList.appendChild(jobCard);
-                });
-            }
-        }
-
-        // Display jobs when page loads
-        window.onload = displayJobs;
-    </script>
-
+  <script src="js/guidliness.js">
+    
+  </script>
 </body>
 </html>

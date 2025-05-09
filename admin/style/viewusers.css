@@ -1,0 +1,125 @@
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 100px 20px 20px; 
+  }
+
+  .navbar {
+    background-color: #596581;
+    color: white;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar .logo {
+    font-size: 26px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar .logo img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+
+  .navbar .logo button {
+    background: none;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .navbar .logo button:hover {
+    color: #4B7BEC;
+  }
+
+  .logout {
+    background: #131313;
+    border: none;
+    padding: 8px 18px;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .logout:hover {
+    background: #333;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #4B7BEC;
+    color: white;
+  }
+
+  td {
+    background-color: #f1f1f1;
+  }
+
+  .back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4B7BEC;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+
+  .back-button:hover {
+    background-color: #3f6ae0;
+  }

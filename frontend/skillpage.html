@@ -3,187 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title>Skill Progress Tracker</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f2f5;
-    }
-
-    .navbar {
-      background-color: #000;
-      color: white;
-      padding: 15px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-weight: bold;
-      font-size: 22px;
-    }
-
-    .nav-link {
-      color: white;
-      text-decoration: none;
-      margin-left: 20px;
-      font-size: 16px;
-      transition: color 0.3s ease;
-    }
-
-    .nav-link:hover {
-      color: #3498db;
-    }
-
-    .info-banner {
-      background-color: #ccd7dc;
-      color: #2c3e50;
-      text-align: center;
-      padding: 14px 20px;
-      font-size: 18px;
-      border-top: 5px solid #0a2940;
-      border-bottom: 1px solid #aaa;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    h1, h2, h3 {
-      color: #2c3e50;
-    }
-
-    h1 {
-      font-size: 32px;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      font-size: 24px;
-      margin-top: 50px;
-    }
-
-    .skills-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-top: 30px;
-    }
-
-    .skill-card {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      text-decoration: none;
-      color: #333;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .skill-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    .skill-name {
-      font-weight: bold;
-      font-size: 20px;
-      margin-bottom: 12px;
-    }
-
-    .progress-bar {
-      background-color: #e0e0e0;
-      border-radius: 20px;
-      overflow: hidden;
-      height: 20px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background-color: #3498db;
-      color: white;
-      font-weight: bold;
-      text-align: center;
-      line-height: 20px;
-      transition: width 0.4s ease;
-    }
-
-    #new-skill-section {
-      margin-top: 60px;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    input, button {
-      padding: 12px;
-      margin: 10px 10px 10px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #3498db;
-    }
-
-    button {
-      background-color: #3498db;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #2980b9;
-    }
-
-    #resourceDisplay {
-      margin-top: 40px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    ul#resourceList {
-      padding-left: 20px;
-    }
-
-    ul#resourceList li {
-      margin: 8px 0;
-    }
-
-    ul#resourceList a {
-      color: #3498db;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    ul#resourceList a:hover {
-      color: #21618c;
-    }
-  </style>
+  <link rel="stylesheet" href="style/skillpage.css">
 </head>
 <body>
 
   <!-- Navbar -->
   <div class="navbar">
-    <div class="nav-left">
-      <div class="logo">🧠 SkillTrack</div>
-      <a class="nav-link" href="#">Home</a>
+    <div class="logo">
+      <a href="home.html">
+        <img src="images/logo.png" alt="Career Path Logo" />
+      </a>
     </div>
-    <div class="nav-right">
-      <a class="nav-link" href="#">Account</a>
+    <div class="home-link">
+      <a href="home.html">Home</a>
+    </div>
+    <div class="right-section">
+      <div class="welcome-message" id="welcomeUser">Welcome, User</div>
+      <div class="account">
+        Account
+        <div class="dropdown-content">
+          <a href="profile.html">Profile</a>
+          <a href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
     </div>
   </div>
-
+  
+  
   <!-- Hero Banner -->
   <div class="info-banner">
     Mapping your skills for future growth
@@ -222,97 +68,10 @@
       <ul id="resourceList"></ul>
     </div>
   </div>
-
-  <script>
-    let selectedSkill = "";
-
-    window.onload = function () {
-      loadSkills();
-    };
-
-    function loadSkills() {
-      const skills = JSON.parse(localStorage.getItem("skills") || "[]");
-      skills.forEach(skill => {
-        addSkill(skill.name, skill.progress);
-      });
-    }
-
-    function handleSkillInput() {
-      const name = document.getElementById("skillName").value.trim();
-      selectedSkill = name;
-
-      if (!name) {
-        document.getElementById("resourceDisplay").style.display = "none";
-        return;
-      }
-
-      const allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
-      const resourceList = document.getElementById("resourceList");
-      resourceList.innerHTML = "";
-
-      if (allResources[name]) {
-        allResources[name].forEach(res => {
-          const li = document.createElement("li");
-          const link = document.createElement("a");
-          link.href = res;
-          link.innerText = res;
-          link.target = "_blank";
-          li.appendChild(link);
-          resourceList.appendChild(li);
-        });
-      } else {
-        resourceList.innerHTML = "<li>No resources available</li>";
-      }
-
-      document.getElementById("resourceDisplay").style.display = "block";
-    }
-
-    function confirmAddSkill() {
-      if (!selectedSkill) {
-        alert("Please enter a skill name.");
-        return;
-      }
-
-      const skills = JSON.parse(localStorage.getItem("skills") || "[]");
-
-      if (skills.some(skill => skill.name === selectedSkill)) {
-        alert("Skill already exists.");
-        return;
-      }
-
-      skills.push({ name: selectedSkill, progress: 0 });
-      localStorage.setItem("skills", JSON.stringify(skills));
-
-      addSkill(selectedSkill, 0);
-      document.getElementById("skillName").value = "";
-      document.getElementById("resourceDisplay").style.display = "none";
-    }
-
-    function addSkill(name, progress = 0) {
-      const skillsContainer = document.getElementById("skills");
-
-      const skillCard = document.createElement("a");
-      skillCard.className = "skill-card";
-      skillCard.href = `/frontend/SkillProgress.html?skill=${name}`;
-
-      const skillName = document.createElement("div");
-      skillName.className = "skill-name";
-      skillName.innerText = name;
-
-      const bar = document.createElement("div");
-      bar.className = "progress-bar";
-
-      const fill = document.createElement("div");
-      fill.className = "progress-fill";
-      fill.style.width = `${progress}%`;
-      fill.innerText = `${progress}%`;
-
-      bar.appendChild(fill);
-      skillCard.appendChild(skillName);
-      skillCard.appendChild(bar);
-      skillsContainer.appendChild(skillCard);
-    }
-  </script>
+  <div class="footer">
+    © 2025. All rights reserved.
+ </div>
+  <script src="js/skillpage.js"></script>
 
 </body>
 </html>
