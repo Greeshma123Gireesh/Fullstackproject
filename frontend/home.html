@@ -4,17 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Job Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style/homestyle.css" />
 </head>
 <body>
   <div class="navbar">
     <div class="logo">
-        <a href="home.html">
-          <img src="images/logo.png" alt="Career Path Logo" />
-        </a>
-      </div>
-      
-          <div class="right-section">
+      <a href="home.html">
+        <img src="images/logo.png" alt="Career Path Logo" />
+      </a>
+    </div>
+    <div class="right-section">
       <div class="welcome-message" id="welcomeUser">Welcome, User</div>
       <div class="account">
         Account
@@ -27,24 +27,24 @@
   </div>
 
   <div class="hero-section">
-    <div class="hero-text">
+    <div class="hero-text reveal">
       <h1>Career <span>Growth</span> and Skill Mapping</h1>
       <p>Unlock your potential and achieve your goals</p>
     </div>
-    <div class="hero-image">
+    <div class="hero-image reveal">
       <img src="images/first.png" alt="Career Growth" />
     </div>
   </div>
 
   <div class="container">
     <div class="three-boxes">
-      <div class="box">
+      <div class="box reveal">
         <a href="skillpage.html">
           <img src="images/progress.webp" alt="Skill Progress" />
           <p>Skill Progress</p>
         </a>
       </div>
-      <div class="box">
+      <div class="box reveal">
         <a href="guideliness.html">
           <img src="images/dream.jpeg" alt="Guidelines" />
           <p>Guidelines for Dream Job</p>
@@ -54,29 +54,38 @@
   </div> 
 
   <div class="content-image-section">
-    <div class="content">
+    <div class="content reveal">
       <h2>Explore Career Opportunities</h2>
       <p>We provide tools, resources, and guidance to help you land your dream job. Empower your career path with expert recommendations and skills analysis!</p>
     </div>
-    <div class="image-slide">
+    <div class="image-slide reveal">
       <img id="changingImage" src="images/slide1.jpeg" alt="Career Opportunities" />
     </div>
   </div>
 
-  
   <div class="container">
     <div class="reviews">
-      <div class="review-card">⭐ “This portal guided me to the perfect job!”</div>
-      <div class="review-card">⭐⭐ “Great tools and resources!”</div>
-      <div class="review-card">⭐⭐⭐ “Helped me map out my career.”</div>
+      <div class="review-card reveal">⭐ “This portal guided me to the perfect job!”</div>
+      <div class="review-card reveal">⭐⭐ “Great tools and resources!”</div>
+      <div class="review-card reveal">⭐⭐⭐ “Helped me map out my career.”</div>
     </div>
   </div>
-
 
   <div class="footer">
      © 2025. All rights reserved.
   </div>
 
   <script src="js/home.js"></script>
+  <script>
+    // Reveal on scroll
+    window.addEventListener('scroll', () => {
+      document.querySelectorAll('.reveal').forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        if (top < window.innerHeight - 100) {
+          el.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
