@@ -1,98 +1,94 @@
- // Show welcome username
- const storedUser = JSON.parse(localStorage.getItem('user'));
- if (storedUser) {
-   document.getElementById('welcomeUser').innerText = `Welcome, ${storedUser.firstName}`;
- }
+document.addEventListener("DOMContentLoaded", async () => {
+  const userId = localStorage.getItem("userId");
+  if (!userId) {
+    alert("User not logged in.");
+    window.location.href = "index.html";
+    return;
+  }
 
- function logout() {
-   localStorage.removeItem('user');
-   alert("You have been logged out!");
-   window.location.href = "index.html";
- }
+  document.getElementById("welcomeUser").innerText = "Loading...";
 
- window.addEventListener("DOMContentLoaded", function () {
-   const storedUser = JSON.parse(localStorage.getItem("user"));
-   if (storedUser) {
-     document.getElementById("firstName").value = storedUser.firstName || '';
-     document.getElementById("lastName").value = storedUser.lastName || '';
-     document.getElementById("email").value = storedUser.email || '';
-     document.querySelector("h1").innerText = `Welcome, ${storedUser.firstName}!`;
-   }
- });
+  try {
+    const res = await fetch(`http://127.0.0.1:5000/profile/${userId}`);
+    if (res.ok) {
+      const d = await res.json();
+      document.getElementById("welcomeUser").innerText = `Welcome, ${d.first_name}`;
 
- document.getElementById("profileForm").addEventListener("submit", function (e) {
-   e.preventDefault();
+      const fields = [
+        { id: "firstName", key: "first_name" },
+        { id: "lastName", key: "last_name" },
+        { id: "email", key: "email" },
+        { id: "aboutMe", key: "about_me" },
+        { id: "jobTitle", key: "job_title" },
+        { id: "dob", key: "dob" },
+        { id: "country", key: "country" },
+        { id: "phoneNumber", key: "phone" },
+        { id: "linkedin", key: "linkedin" },
+        { id: "github", key: "github" },
+        { id: "skills", key: "skills" },
+        { id: "experience", key: "experience" }
+      ];
 
-   // Save Education
-   const degrees = Array.from(document.getElementsByName("degree[]")).map(input => input.value);
-   const institutions = Array.from(document.getElementsByName("institution[]")).map(input => input.value);
-   const educationDetails = degrees.map((degree, index) => ({
-     degree: degree,
-     institution: institutions[index]
-   }));
-   localStorage.setItem("education", JSON.stringify(educationDetails));
+      fields.forEach(field => {
+        if (d[field.key] && document.getElementById(field.id)) {
+          document.getElementById(field.id).value = d[field.key];
+        }
+      });
 
-   const resumeInput = document.getElementById("resumeUpload");
-   const file = resumeInput.files[0];
+      // ✅ Show download link if resume exists
+      if (d.resume) {
+        const resumeLink = document.createElement("a");
+        resumeLink.href = `data:application/octet-stream;base64,${d.resume}`;
+        resumeLink.download = "resume.pdf";
+        resumeLink.innerText = "⬇ Download Resume";
+        resumeLink.className = "resume-download";
 
-   // Save other profile details
-   const profileData = {
-     firstName: document.getElementById("firstName").value,
-     lastName: document.getElementById("lastName").value,
-     email: document.getElementById("email").value,
-     aboutMe: document.getElementById("aboutMe").value,
-     jobTitle: document.getElementById("jobTitle").value,
-     dob: document.getElementById("dob").value,
-     country: document.getElementById("country").value,
-     phoneNumber: document.getElementById("phoneNumber").value,
-     linkedin: document.getElementById("linkedin").value,
-     github: document.getElementById("github").value,
-     skills: document.getElementById("skills").value,
-     experience: document.getElementById("experience").value
-   };
-   localStorage.setItem("profile", JSON.stringify(profileData));
+        const resumeContainer = document.createElement("div");
+        resumeContainer.appendChild(resumeLink);
+        document.getElementById("resumeUpload").insertAdjacentElement("afterend", resumeContainer);
+      }
+    } else {
+      alert("Failed to load profile.");
+    }
+  } catch (err) {
+    console.error("Fetch profile failed:", err);
+  }
 
-   // Update basic user info
-   const storedUser = JSON.parse(localStorage.getItem("user"));
-   if (storedUser) {
-     storedUser.firstName = profileData.firstName;
-     storedUser.lastName = profileData.lastName;
-     storedUser.email = profileData.email;
-     localStorage.setItem("user", JSON.stringify(storedUser));
-   }
+  // Submit profile form
+  document.getElementById("profileForm").addEventListener("submit", async e => {
+    e.preventDefault();
 
-   // Save Resume and redirect
-   if (file) {
-     const reader = new FileReader();
-     reader.onloadend = function () {
-       const base64String = reader.result;
-       localStorage.setItem("resumeFile", base64String);
-       localStorage.setItem("resumeName", file.name);
-       window.location.href = "job.html?title=Developer";
-     };
-     reader.readAsDataURL(file);
-   } else {
-     window.location.href = "job.html?title=Developer";
-   }
- });
+    const formData = new FormData();
+    const fieldIds = [
+      "firstName", "lastName", "email", "aboutMe", "jobTitle", "dob",
+      "country", "phoneNumber", "linkedin", "github", "skills", "experience"
+    ];
 
- function addEducation() {
-   const educationSection = document.getElementById('educationSection');
-   const newEntry = document.createElement('div');
-   newEntry.classList.add('education-entry');
-   newEntry.innerHTML = `
-     <label>Degree</label>
-     <input type="text" placeholder="Enter your degree" name="degree[]">
-     <label>Institution</label>
-     <input type="text" placeholder="Enter your institution" name="institution[]">
-   `;
-   educationSection.appendChild(newEntry);
- }
- if (storedUser) {
-   document.getElementById('welcomeUser').innerText = `Welcome, ${storedUser.firstName}`;
- }
+    fieldIds.forEach(id => {
+      formData.append(id, document.getElementById(id).value);
+    });
 
- function logout() {
-   alert("You have been logged out!");
-   window.location.href = "index.html";
- }
+    const file = document.getElementById("resumeUpload").files[0];
+    if (file) formData.append("resume", file);
+
+    try {
+      const res2 = await fetch(`http://127.0.0.1:5000/profile/${userId}`, {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await res2.json();
+      alert(result.message);
+    } catch (error) {
+      console.error("Profile update error:", error);
+      alert("Failed to update profile.");
+    }
+  });
+});
+
+// 🔐 Logout function
+function logout() {
+  localStorage.removeItem("userId");
+  localStorage.removeItem("userEmail");
+  window.location.href = "index.html";
+}

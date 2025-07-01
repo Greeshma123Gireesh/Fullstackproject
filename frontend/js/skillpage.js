@@ -1,3 +1,4 @@
+const API_BASE = "http://127.0.0.1:5000"; // ✅ adjust if needed
 let selectedSkill = "";
 
 window.onload = function () {
@@ -11,34 +12,46 @@ function loadSkills() {
   });
 }
 
+// ✅ Fetch resource from DB instead of localStorage
 function handleSkillInput() {
   const name = document.getElementById("skillName").value.trim();
   selectedSkill = name;
 
-  if (!name) {
-    document.getElementById("resourceDisplay").style.display = "none";
-    return;
-  }
-
-  const allResources = JSON.parse(localStorage.getItem("skillResources") || "{}");
+  const resourceDisplay = document.getElementById("resourceDisplay");
   const resourceList = document.getElementById("resourceList");
   resourceList.innerHTML = "";
 
-  if (allResources[name]) {
-    allResources[name].forEach(res => {
-      const li = document.createElement("li");
-      const link = document.createElement("a");
-      link.href = res;
-      link.innerText = res;
-      link.target = "_blank";
-      li.appendChild(link);
-      resourceList.appendChild(li);
-    });
-  } else {
-    resourceList.innerHTML = "<li>No resources available</li>";
+  if (!name) {
+    resourceDisplay.style.display = "none";
+    return;
   }
 
-  document.getElementById("resourceDisplay").style.display = "block";
+  fetch(`${API_BASE}/get_all_languages`)
+    .then(res => res.json())
+    .then(data => {
+      const languageData = data.find(lang => lang.language.toLowerCase() === name.toLowerCase());
+
+      if (languageData) {
+        languageData.resources.forEach(res => {
+          const li = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = res;
+          link.innerText = res;
+          link.target = "_blank";
+          li.appendChild(link);
+          resourceList.appendChild(li);
+        });
+      } else {
+        resourceList.innerHTML = "<li>No resources available</li>";
+      }
+
+      resourceDisplay.style.display = "block";
+    })
+    .catch(err => {
+      console.error("Failed to fetch resources:", err);
+      resourceList.innerHTML = "<li>Error loading resources</li>";
+      resourceDisplay.style.display = "block";
+    });
 }
 
 function confirmAddSkill() {
@@ -86,6 +99,7 @@ function addSkill(name, progress = 0) {
   skillCard.appendChild(bar);
   skillsContainer.appendChild(skillCard);
 }
+
 const storedUser = JSON.parse(localStorage.getItem('user'));
 if (storedUser) {
   document.getElementById('welcomeUser').innerText = `Welcome, ${storedUser.firstName}`;

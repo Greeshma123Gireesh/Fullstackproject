@@ -16,9 +16,13 @@
     <div class="rightsection">
       <h2>AI Powered Career Growth and Skill Mapping</h2>
 
+      <!-- ✅ Login Box -->
       <div id="login-box">
         <h3>Login</h3>
         <form id="loginform">
+          <!-- 🔴 Error Message Placeholder -->
+          <p id="login-error" style="color: red; display: none;"></p>
+
           <input type="text" name="username" id="username" placeholder="Enter your email" required />
           <input type="password" name="password" id="login-password" placeholder="Password" required />
           <button type="submit">Login</button>
@@ -26,6 +30,7 @@
         <p>Don't have an account? <a href="#" onclick="showsignup()">Sign Up</a></p>
       </div>
 
+      <!-- ✅ Signup Box -->
       <div id="signup-box" style="display: none;">
         <h3>Sign Up</h3>
         <form id="signupform">
@@ -41,8 +46,6 @@
     </div>
   </div>
 
-<script src="js/loginsignup.js"></script>
+  <script src="js/loginsignup.js"></script>
 </body>
 </html>
-
-  

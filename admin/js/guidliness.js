@@ -1,50 +1,66 @@
-document.getElementById('addJobForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+document.getElementById('addJobForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
 
-    const jobData = {
-      jobTitle: document.getElementById('jobTitle').value.trim(),
-      skills: document.getElementById('skills').value.trim(),
-      learnWhat: document.getElementById('learnWhat').value.trim(),
-      achieveHow: document.getElementById('achieveHow').value.trim(),
-      roadmap: document.getElementById('roadmap').value.trim(),
-      salary: document.getElementById('salary').value.trim(),
-      companies: document.getElementById('companies').value.trim()
-    };
+  const jobData = {
+    jobTitle: document.getElementById('jobTitle').value.trim(),
+    skills: document.getElementById('skills').value.trim(),
+    learnWhat: document.getElementById('learnWhat').value.trim(),
+    achieveHow: document.getElementById('achieveHow').value.trim(),
+    roadmap: document.getElementById('roadmap').value.trim(),
+    salary: document.getElementById('salary').value.trim(),
+    companies: document.getElementById('companies').value.trim()
+  };
 
-    const jobs = JSON.parse(localStorage.getItem('jobs')) || [];
-    jobs.push(jobData);
-    localStorage.setItem('jobs', JSON.stringify(jobs));
+  try {
+    const res = await fetch('http://127.0.0.1:5000/add_job', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(jobData)
+    });
 
-    this.reset();
-    displayJobs();
-  });
-
-  function displayJobs() {
-    const jobsList = document.getElementById('jobsList');
-    jobsList.innerHTML = '';
-    const jobs = JSON.parse(localStorage.getItem('jobs')) || [];
-
-    if (jobs.length === 0) {
-      jobsList.innerHTML = '<p>No jobs added yet!</p>';
+    if (res.ok) {
+      alert("Job added successfully!");
+      this.reset();
+      displayJobs();
     } else {
-      jobs.forEach((job, index) => {
-        const div = document.createElement('div');
-        div.classList.add('job-card');
+      const error = await res.json();
+      alert("Error: " + error.error);
+    }
+  } catch (err) {
+    alert("Failed to connect to server.");
+  }
+});
 
-        const jobText = document.createElement('pre');
-        jobText.classList.add('job-content');
-        jobText.contentEditable = false;
-        jobText.textContent =
-`Job Title: ${job.jobTitle}
+async function displayJobs() {
+  const jobsList = document.getElementById('jobsList');
+  jobsList.innerHTML = '';
+
+  try {
+    const res = await fetch('http://127.0.0.1:5000/get_jobs');
+    const jobs = await res.json();
+
+    if (!jobs.length) {
+      jobsList.innerHTML = '<p>No jobs added yet!</p>';
+      return;
+    }
+
+    jobs.forEach((job, index) => {
+      const div = document.createElement('div');
+      div.classList.add('job-card');
+
+      const jobText = document.createElement('pre');
+      jobText.classList.add('job-content');
+      jobText.textContent =
+`Job Title: ${job.job_title}
 
 Skills Required:
 ${job.skills}
 
 What to Learn:
-${job.learnWhat}
+${job.learn_what}
 
 How to Achieve:
-${job.achieveHow}
+${job.achieve_how}
 
 Roadmap:
 ${job.roadmap}
@@ -55,68 +71,18 @@ ${job.salary}
 Top Companies:
 ${job.companies}`;
 
-        const actions = document.createElement('div');
-        actions.classList.add('job-actions');
+      div.appendChild(jobText);
+      jobsList.appendChild(div);
+    });
 
-        const editBtn = document.createElement('button');
-        editBtn.textContent = 'Edit';
-        editBtn.classList.add('edit-btn');
-        editBtn.onclick = () => {
-          jobText.contentEditable = true;
-          jobText.focus();
-        };
-
-        const saveBtn = document.createElement('button');
-        saveBtn.textContent = 'Save';
-        saveBtn.classList.add('save-btn');
-        saveBtn.onclick = () => {
-          const editedLines = jobText.textContent.trim().split('\n');
-          job.jobTitle = editedLines[0].replace('Job Title: ', '').trim();
-          job.skills = extractField('Skills Required:', editedLines);
-          job.learnWhat = extractField('What to Learn:', editedLines);
-          job.achieveHow = extractField('How to Achieve:', editedLines);
-          job.roadmap = extractField('Roadmap:', editedLines);
-          job.salary = extractField('Salary:', editedLines);
-          job.companies = extractField('Top Companies:', editedLines);
-          localStorage.setItem('jobs', JSON.stringify(jobs));
-          jobText.contentEditable = false;
-          alert("Changes saved!");
-        };
-
-        const removeBtn = document.createElement('button');
-        removeBtn.textContent = 'Remove';
-        removeBtn.classList.add('remove-btn');
-        removeBtn.onclick = () => {
-          jobs.splice(index, 1);
-          localStorage.setItem('jobs', JSON.stringify(jobs));
-          displayJobs();
-        };
-
-        actions.appendChild(editBtn);
-        actions.appendChild(saveBtn);
-        actions.appendChild(removeBtn);
-
-        div.appendChild(jobText);
-        div.appendChild(actions);
-        jobsList.appendChild(div);
-      });
-    }
+  } catch (err) {
+    jobsList.innerHTML = '<p>Error loading jobs!</p>';
   }
+}
 
-  function extractField(header, lines) {
-    const start = lines.findIndex(line => line.startsWith(header));
-    if (start === -1) return '';
-    const content = [];
-    for (let i = start + 1; i < lines.length; i++) {
-      if (lines[i].trim().endsWith(':')) break;
-      content.push(lines[i]);
-    }
-    return content.join('\n').trim();
-  }
+window.onload = displayJobs;
 
-  window.onload = displayJobs;
-
-  function logout() {
+function logout() {
   alert("Logged out!");
   window.location.href = "../frontend/index.html";
 }
